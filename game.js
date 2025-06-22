@@ -1,7 +1,7 @@
 const config = {
   type: Phaser.AUTO,
   width: 1300,
-  height: 650,
+  height: 750,
   backgroundColor: "#f0e6d6",
   physics: {
     default: "arcade",
@@ -33,53 +33,42 @@ let playAgainButton;
 const game = new Phaser.Game(config);
 
 function preload() {
-  this.load.image("tan-sanzang", "assets/tan-sanzang.png");
-  this.load.image("sutra-scrolls", "assets/sutra-scrolls.png");
-  this.load.image("white-bone-spirit", "assets/white-bone-spirit.png");
-  this.load.image("play-again", "assets/play-again.png");
+  this.load.image("tan-sanzang", "tan-sanzang.png");
+  this.load.image("sutra-scrolls", "sutra-scrolls.png");
+  this.load.image("white-bone-spirit", "white-bone-spirit.png");
+  this.load.image("play-again", "play-again.png");
 }
 
 function create() {
-  // monk
   player = this.physics.add.sprite(200, 100, "tan-sanzang").setScale(0.05);
   player.setCollideWorldBounds(true);
 
-  // ghost
-  whiteBoneSpirit = this.physics.add.sprite(300, 200, "white-bone-spirit").setScale(0.07);
-  whiteBoneSpirit.setCollideWorldBounds(true);
-
-  // scroll
   sutraScroll = this.physics.add.sprite(100, 100, "sutra-scrolls").setScale(0.05);
 
-  // hitbox tuning
-  player.body.setSize(player.width * 0.6, player.height * 0.6).setOffset(player.width * 0.2, player.height * 0.2);
-  whiteBoneSpirit.body.setSize(whiteBoneSpirit.width * 0.8, whiteBoneSpirit.height * 0.8).setOffset(whiteBoneSpirit.width * 0.1, whiteBoneSpirit.height * 0.1);
+  whiteBoneSpirit = this.physics.add.sprite(300, 200, "white-bone-spirit").setScale(0.07);
+  whiteBoneSpirit.setCollideWorldBounds(true);
 
   cursors = this.input.keyboard.createCursorKeys();
   boostKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
 
-  // score
   scoreText = this.add.text(16, 16, "score: 0", {
     fontSize: "24px",
     fill: "#000",
     fontFamily: "Arial"
   });
 
-  // time
   timeText = this.add.text(1100, 16, "time: 0s", {
     fontSize: "24px",
     fill: "#000",
     fontFamily: "Arial"
   });
 
-  // game over
   gameOverText = this.add.text(650, 300, "", {
     fontSize: "48px",
     fill: "#800000",
     fontFamily: "Arial"
   }).setOrigin(0.5);
 
-  // timer
   timerEvent = this.time.addEvent({
     delay: 1000,
     callback: updatePlayTime,
@@ -87,17 +76,15 @@ function create() {
     loop: true
   });
 
-  // play again button (⬆ moved up from y: 450 to y: 400)
-  playAgainButton = this.add.sprite(650, 400, "play-again").setInteractive().setScale(0.1);
+  playAgainButton = this.add.sprite(650, 370, "play-again").setInteractive().setScale(0.15);
   playAgainButton.setVisible(false);
 
   playAgainButton.on("pointerdown", () => {
     restartGame.call(this);
   });
-  playAgainButton.on("pointerover", () => playAgainButton.setScale(0.12));
-  playAgainButton.on("pointerout", () => playAgainButton.setScale(0.1));
+  playAgainButton.on("pointerover", () => playAgainButton.setScale(0.18));
+  playAgainButton.on("pointerout", () => playAgainButton.setScale(0.15));
 
-  // collisions
   this.physics.add.overlap(player, sutraScroll, collectSutraScroll, null, this);
   this.physics.add.overlap(player, whiteBoneSpirit, hitBySpirit, null, this);
 }
